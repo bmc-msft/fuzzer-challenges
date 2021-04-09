@@ -1,38 +1,24 @@
-#include <stdio.h>
-#include <unistd.h>
 #include <string.h>
-#include <strings.h>
-#include <stdlib.h>
 #include <stdint.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-
-#define bail(msg, pos)                                         \
-  while (1) {                                                  \
-                                                               \
-    fprintf(stderr, "%s at %u\n", (char *)msg, (uint32_t)pos); \
-    return 0;                                                  \
-                                                               \
-  }
+#include <stdlib.h>
 
 int LLVMFuzzerTestOneInput(uint8_t *buf, size_t len) {
 
   uint64_t *p64;
 
-  if (len < 32) bail("too short", 0);
+  if (len < 32) return 0;
 
   p64 = (uint64_t *)(buf);
-  if (*p64 != 0x1122334455667788) bail("wrong u64", 0);
+  if (*p64 != 0x1122334455667788) return 0;
 
   p64 = (uint64_t *)(buf + 8);
-  if (*p64 != 0xa0a1a2a3a4a5a6a7) bail("wrong u64", 8);
+  if (*p64 != 0xa0a1a2a3a4a5a6a7) return 0;
 
   p64 = (uint64_t *)(buf + 16);
-  if (*p64 != 0x1234aabbccddeeff) bail("wrong u64", 16);
+  if (*p64 != 0x1234aabbccddeeff) return 0;
 
   p64 = (uint64_t *)(buf + 24);
-  if (*p64 != 0x0f1f2f3f4f5f6f7f) bail("wrong u64", 24);
+  if (*p64 != 0x0f1f2f3f4f5f6f7f) return 0;
 
   abort();
 

@@ -1,14 +1,12 @@
-TARGETS = test-crc32 test-u8 test-u16 test-u32 test-u64 test-float test-double test-longdouble test-u128 test-u32-cmp test-memcmp test-strcmp test-transform test-extint
+CC=clang
+CFLAGS=-g3 -fsanitize=fuzzer -fsanitize=address
+SOURCES=$(wildcard *.c)
+BINS=$(SOURCES:.c=.exe)
 
-all:
-	@echo Use test.sh to perform the test.
-	@echo To compile with CC and CFLAGS yourself do \"make compile\", however test.sh will overwrite these.
+%.exe: %.c
+	$(CC) $(CFLAGS) -o $@ $^
 
-compile:	$(TARGETS)
-
-%:	%.c
-	-$(CC) $(CFLAGS) -o $@ $@.c -lm
+all:	$(BINS)
 
 clean:
-	rm -f $(TARGETS) core* *~ *.log HONGGFUZZ.REPORT.TXT SIG* afl++.dic
-	rm -rf out-* in
+	rm -rf $(TARGETS) core* *~ *.log HONGGFUZZ.REPORT.TXT SIG* afl++.dic *.exe *.pdb *.exp *.lib out-* in
